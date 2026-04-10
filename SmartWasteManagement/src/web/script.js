@@ -1,6 +1,11 @@
+// --- YAHAN CHANGE KAREIN ---
+// Render par deploy karne ke baad jo URL milega, use yahan paste karein
+const API_BASE = "https://smart-waste-dashboard.onrender.com"; 
+
 async function loadDustbins() {
     try {
-        const response = await fetch('http://localhost:8080/api/bins');
+        // Localhost ko API_BASE se replace kar diya
+        const response = await fetch(`${API_BASE}/api/bins`);
         const data = await response.text();
         const binListDiv = document.getElementById('bin-list');
 
@@ -40,17 +45,20 @@ async function loadDustbins() {
             }
         });
         binListDiv.innerHTML = html + "</table>";
-    } catch (e) { console.log("Server not reachable"); }
+    } catch (e) { 
+        console.log("Server not reachable at: " + API_BASE); 
+    }
 }
 
+// Baki saare fetch calls mein bhi API_BASE use karein
 async function setTransit(id) {
-    await fetch('http://localhost:8080/api/transit', { method: 'POST', body: id });
+    await fetch(`${API_BASE}/api/transit`, { method: 'POST', body: id });
     loadDustbins();
 }
 
 async function resetBin(id) {
     if(confirm("Confirm Pickup?")) {
-        await fetch('http://localhost:8080/api/reset', { method: 'POST', body: id });
+        await fetch(`${API_BASE}/api/reset`, { method: 'POST', body: id });
         loadDustbins();
     }
 }
@@ -61,7 +69,7 @@ async function addBin() {
     const level = document.getElementById('fillLevel').value;
     if(level < 0 || level > 100) return alert("Invalid level");
 
-    await fetch('http://localhost:8080/api/add', { method: 'POST', body: `${id},${loc},${level},1` });
+    await fetch(`${API_BASE}/api/add`, { method: 'POST', body: `${id},${loc},${level},1` });
     loadDustbins();
 }
 
